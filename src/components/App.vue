@@ -11,10 +11,20 @@
     <h2>My Tasks:</h2>
     <Task v-for="task in filteredTasks" :task="task" :key="task.id"></Task>
     <ul class="filters">
-      <li v-for="(val, key) in filters">
+      <li v-for="(val, key) in completeFilters">
         <div
           class="filter"
-          v-on:click="toggleFilter($event.target, key)">
+          v-on:click="setCompleteFilters($event.target, key)"
+          :class="{ active: isActive(key) }">
+          {{ val.name }}
+        </div>
+      </li>
+    </ul>
+    <ul class="filters">
+      <li v-for="(val, key) in timeFilters">
+        <div
+          class="filter"
+          v-on:click="setTimeFilters($event.target, key)">
           {{ val.name }}
         </div>
       </li>
@@ -37,11 +47,7 @@ export default {
   data() {
     return {
       newTask: {},
-      filters: {
-        all: {
-          name: 'All',
-          filter: (task => task),
-        },
+      completeFilters: {
         existing: {
           name: 'Existing',
           filter: (task => !task.completed),
@@ -50,6 +56,8 @@ export default {
           name: 'Completed',
           filter: (task => task.completed),
         },
+      },
+      timeFilters: {
         overdue: {
           name: 'Previously Due',
           filter: (task => !task.completed && (moment(task.dueDate).isBefore(moment(), 'date'))),
@@ -64,7 +72,10 @@ export default {
         },
       },
       error: null,
-      activeFilters: [],
+      activeFilters: {
+        complete: null,
+        time: [],
+      },
     };
   },
   computed: {
@@ -73,16 +84,27 @@ export default {
       return store.state.tasks;
     },
     filteredTasks() {
-      // set local variable to all tasks before filtering begins:
-      let filteredResults = this.tasks;
+      // set local var to build results
+      let filteredResults = [];
 
       // check if any filters are applied:
-      if (this.activeFilters.length > 0) {
+      if (this.activeFilters.time.length > 0) {
         // apply each filter to results:
-        this.activeFilters.forEach((fil) => {
-          // reset filteredResults for each filter:
-          filteredResults = filteredResults.filter(this.filters[fil].filter);
+        this.activeFilters.time.forEach((fil) => {
+          const filArr = this.tasks.filter(this.timeFilters[fil].filter);
+          filArr.forEach((task) => {
+            if (filteredResults.indexOf(task) === -1) {
+              filteredResults.push(task);
+            }
+          });
         });
+      } else {
+        filteredResults = this.tasks;
+      }
+
+      if (this.activeFilters.complete) {
+        // eslint-disable-next-line
+        filteredResults = filteredResults.filter(this.completeFilters[this.activeFilters.complete].filter);
       }
 
       return filteredResults;
@@ -107,14 +129,28 @@ export default {
       this.newTask.dueDate = null;
       this.error = null;
     },
-    toggleFilter(target, key) {
+    setTimeFilters(target, key) {
       if (!target.classList.contains('active')) {
-        this.activeFilters.push(key);
+        this.activeFilters.time.push(key);
       } else {
-        const index = this.activeFilters.indexOf(key);
-        this.activeFilters.splice(index, 1);
+        const index = this.activeFilters.time.indexOf(key);
+        this.activeFilters.time.splice(index, 1);
       }
       target.classList.toggle('active');
+    },
+    setCompleteFilters(target, key) {
+      // eslint-disable-next-line
+      // console.log('running setCompleteFiltesr', key);
+      if (target.classList.contains('active')) {
+        this.activeFilters.complete = null;
+      } else {
+        this.activeFilters.complete = key;
+      }
+
+      target.classList.toggle('active');
+    },
+    isActive(item) {
+      return this.activeFilters.complete === item;
     },
   },
   components: {
