@@ -13,9 +13,9 @@ const store = new Vuex.Store({
     ],
   },
   getters: {
-    getTasks: state => state.tasks,
-    getCompletedTasks: state => state.tasks.filter(task => task.completed),
-    getOutstandingTasks: state => state.tasks.filter(task => !task.completed),
+    // getTasks: state => state.tasks,
+    // getCompletedTasks: state => state.tasks.filter(task => task.completed),
+    // getOutstandingTasks: state => state.tasks.filter(task => !task.completed),
     // getTaskById: state => id => state.tasks.find(task => task.id === id),
   },
   mutations: {

@@ -17,9 +17,6 @@
           v-on:click="toggleFilter($event.target, key)">
           {{ key }}
         </div>
-        <!-- <a :href="'#/' + key"
-          :class="{ selected: visibility === key }"
-          @click="visibility = key">{{ key }}</a> -->
       </li>
     </ul>
   </div>
@@ -32,22 +29,16 @@ import Datepicker from 'vuejs-datepicker';
 import Task from './Task';
 import store from './../store';
 
-// const filters = {
-// };
-
 export default {
   name: 'App',
   data() {
     return {
       newTask: {},
       filters: {
-        all: tasks => tasks,
-        remaining: tasks => tasks.filter(task => !task.completed),
-        completed: tasks => tasks.filter(task => task.completed),
-        dueToday: tasks => tasks.filter(task => this.compareDates(task.dueDate, new Date())),
-        dueTomorrow: tasks => tasks.filter(task => task),
-        // eslint-disable-next-line
-        // dueTomorrow: tasks => tasks.filter(task => this.compareDates(task.dueDate, this.getTomorrow())),
+        remaining: (task => !task.completed),
+        completed: (task => task.completed),
+        dueToday: (task => this.compareDates(task.dueDate, new Date())),
+        dueTomorrow: (task => task),
       },
       visibility: 'all',
       error: null,
@@ -56,10 +47,23 @@ export default {
   },
   computed: {
     tasks() {
+      // get all the tasks from the vuex store obj:
       return store.state.tasks;
     },
     filteredTasks() {
-      return this.filters[this.visibility](this.tasks);
+      // set local variable to all tasks before filtering begins:
+      let filteredResults = this.tasks;
+
+      // check if any filters are applied:
+      if (this.activeFilters.length > 0) {
+        // apply each filter to results:
+        this.activeFilters.forEach((fil) => {
+          // reset filteredResults for each filter:
+          filteredResults = filteredResults.filter(this.filters[fil]);
+        });
+      }
+
+      return filteredResults;
     },
   },
   methods: {
@@ -89,11 +93,6 @@ export default {
         this.activeFilters.splice(index, 1);
       }
       target.classList.toggle('active');
-      this.applyFilters();
-    },
-    applyFilters() {
-      // eslint-disable-next-line
-      console.log("activeFilters: ", this.activeFilters);
     },
     compareDates(date1, date2) {
       // options.date1
