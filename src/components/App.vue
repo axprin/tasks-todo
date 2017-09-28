@@ -89,22 +89,26 @@ export default {
 
       // check if any filters are applied:
       if (this.activeFilters.time.length > 0) {
-        // apply each filter to results:
+        // loop through all active time-based filters:
         this.activeFilters.time.forEach((fil) => {
+          // run each filter to get an array
           const filArr = this.tasks.filter(this.timeFilters[fil].filter);
           filArr.forEach((task) => {
+            // within each filter, push all unique tasks into filterdResults
             if (filteredResults.indexOf(task) === -1) {
               filteredResults.push(task);
             }
           });
         });
       } else {
+        // if no time-based filters are applied, use all tasks available
         filteredResults = this.tasks;
       }
 
       if (this.activeFilters.complete) {
-        // eslint-disable-next-line
-        filteredResults = filteredResults.filter(this.completeFilters[this.activeFilters.complete].filter);
+        // filter down the existing filteredResults by complete or not:
+        filteredResults = filteredResults
+          .filter(this.completeFilters[this.activeFilters.complete].filter);
       }
 
       return filteredResults;
@@ -112,6 +116,7 @@ export default {
   },
   methods: {
     addTask() {
+      // basic error handling
       if (!this.newTask.name || !this.newTask.details || !this.newTask.dueDate) {
         this.error = 'You must gimme all required fields';
         return;
@@ -139,8 +144,6 @@ export default {
       target.classList.toggle('active');
     },
     setCompleteFilters(target, key) {
-      // eslint-disable-next-line
-      // console.log('running setCompleteFiltesr', key);
       if (target.classList.contains('active')) {
         this.activeFilters.complete = null;
       } else {
