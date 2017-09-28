@@ -15,7 +15,7 @@
         <div
           class="filter"
           v-on:click="toggleFilter($event.target, key)">
-          {{ key }}
+          {{ val.name }}
         </div>
       </li>
     </ul>
@@ -25,9 +25,12 @@
 <script>
 import Guid from 'guid';
 import Datepicker from 'vuejs-datepicker';
-
+import moment from 'moment';
 import Task from './Task';
 import store from './../store';
+
+// required for moment.js
+moment().format();
 
 export default {
   name: 'App',
@@ -35,12 +38,31 @@ export default {
     return {
       newTask: {},
       filters: {
-        remaining: (task => !task.completed),
-        completed: (task => task.completed),
-        dueToday: (task => this.compareDates(task.dueDate, new Date())),
-        dueTomorrow: (task => task),
+        all: {
+          name: 'All',
+          filter: (task => task),
+        },
+        existing: {
+          name: 'Existing',
+          filter: (task => !task.completed),
+        },
+        completed: {
+          name: 'Completed',
+          filter: (task => task.completed),
+        },
+        overdue: {
+          name: 'Previously Due',
+          filter: (task => !task.completed && (moment(task.dueDate).isBefore(moment(), 'date'))),
+        },
+        dueToday: {
+          name: 'Due Today',
+          filter: (task => moment(task.dueDate).isSame(moment(), 'date')),
+        },
+        dueTomorrow: {
+          name: 'Due Tomorrow',
+          filter: (task => moment(task.dueDate).isSame(moment().add(1, 'day'), 'date')),
+        },
       },
-      visibility: 'all',
       error: null,
       activeFilters: [],
     };
@@ -59,7 +81,7 @@ export default {
         // apply each filter to results:
         this.activeFilters.forEach((fil) => {
           // reset filteredResults for each filter:
-          filteredResults = filteredResults.filter(this.filters[fil]);
+          filteredResults = filteredResults.filter(this.filters[fil].filter);
         });
       }
 
@@ -94,22 +116,6 @@ export default {
       }
       target.classList.toggle('active');
     },
-    compareDates(date1, date2) {
-      // options.date1
-      // eslint-disable-next-line
-      // console.log("date1, date2: ", date1, date2);
-      const d1 = date1.setHours(0, 0, 0, 0);
-      const d2 = date2.setHours(0, 0, 0, 0);
-      if (d1 === d2) return true;
-      return false;
-    },
-
-    // getTomorrow() {
-    //   const tomorrow = new Date();
-    //   // eslint-disable-next-line
-    //   // console.log(tomorrow.setDate(tomorrow.getDate() + 1).toString);
-    //   return tomorrow.setDate(tomorrow.getDate() + 1);
-    // },
   },
   components: {
     Task,
