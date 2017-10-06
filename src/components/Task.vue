@@ -83,6 +83,7 @@ export default {
 
 <style lang="scss" scoped>
 .task {
+  border: 1px solid green;
   &.active {
     .details {
       display: block;

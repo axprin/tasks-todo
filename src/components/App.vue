@@ -1,15 +1,14 @@
 <template>
   <div id="app">
     <h2>Create New Task</h2>
-    <form>
-      <input type="text" placeholder="Task Name" v-model="newTask.name">
-      <textarea placeholder="Task Details" v-model="newTask.details"></textarea>
-      <datepicker v-model="newTask.dueDate" format="M/d/yyyy" placeholder="Select Due Date"></datepicker>
+    <form class="new-task-form">
+      <datepicker class="form-element date-picker" v-model="newTask.dueDate" format="M/d/yyyy" placeholder="Select Due Date"></datepicker>
+      <input class="form-element name" type="text" placeholder="Task Name" v-model="newTask.name">
+      <textarea class="form-element details" placeholder="Task Details" v-model="newTask.details"></textarea>
     </form>
     <div v-on:click="addTask">Add Task</div>
     <div v-if="error" class="error">{{ error }}</div>
     <h2>My Tasks:</h2>
-    <Task v-for="task in filteredTasks" :task="task" :key="task.id"></Task>
     <ul class="filters">
       <li v-for="(val, key) in completeFilters">
         <div
@@ -29,6 +28,12 @@
         </div>
       </li>
     </ul>
+    <div class="task-wrapper" v-if="filteredTasks.length > 0">
+      <Task v-for="task in filteredTasks" :task="task" :key="task.id"></Task>
+    </div>
+    <div v-else>
+      NO TASKS
+    </div>
   </div>
 </template>
 
@@ -60,7 +65,7 @@ export default {
       timeFilters: {
         overdue: {
           name: 'Previously Due',
-          filter: (task => !task.completed && (moment(task.dueDate).isBefore(moment(), 'date'))),
+          filter: (task => (moment(task.dueDate).isBefore(moment(), 'date'))),
         },
         dueToday: {
           name: 'Due Today',
@@ -107,10 +112,10 @@ export default {
 
       if (this.activeFilters.complete) {
         // filter down the existing filteredResults by complete or not:
-        filteredResults = filteredResults
-          .filter(this.completeFilters[this.activeFilters.complete].filter);
+        filteredResults = filteredResults.filter(this.completeFilters[this.activeFilters.complete].filter);
       }
 
+      // return data
       return filteredResults;
     },
   },
@@ -170,18 +175,51 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* text-align: center; */
+  text-align: center;
   color: #2c3e50;
   margin-top: 60px;
 
-  .filters {
-    list-style: none;
-    .filter {
-      background-color: lightgray;
-      &.active {
-        background-color: blue;
+  .new-task-form {
+    max-width: 500px;
+    margin: 0 auto;
+    .form-element {
+      display: block;
+      width: 100%;
+      &.name {
+        width: calc(100% - 150px);
+        display: inline;
+        float: right;
+      }
+      &.date-picker {
+        float: left;
+        display: inline;
+        width: 100px;
+        text-align: center;
       }
     }
+  }
+
+  .filters {
+    list-style: none;
+    li {
+      display: inline-block;
+      text-align: center;
+    }
+    .filter {
+      cursor: pointer;
+      padding: 10px 20px;
+      margin: 5px;
+      background-color: lightgray;
+      color: black;
+      &.active {
+        background-color: blue;
+        color: white;
+      }
+    }
+  }
+
+  .task-wrapper {
+    border: 1px solid black;
   }
 }
 </style>
