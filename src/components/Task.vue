@@ -2,27 +2,42 @@
   <div
     v-if="!editMode"
     class="task"
-    v-bind:class="{ active: isActive }"
-    v-on:click="showDetails">
-    <span>{{ task.name }} - </span>
-    <span>Completed: {{ task.completed }}</span>
-    <span>Due Date: {{ this.formatDate(this.task.dueDate) }}</span>
-    <div class="details">
-      <span>{{ task.details }}</span>
-      <div v-on:click="hideDetails">hide</div>
+    v-bind:class="{ active: isActive }">
+    <div class="task-content">
+      <div><span class="heading">Task</span>: {{ task.name }}</div>
+      <div v-if="task.completed">
+        <span class="heading">Status</span>: Completed
+      </div>
+      <div v-else>
+        <span class="heading">Status</span>: Not Completed
+      </div>
+      <div>
+        <span class="heading">Due date</span>: {{ this.formatDate(this.task.dueDate) }}
+      </div>
     </div>
-    <div v-on:click="deleteTask">X</div>
-    <div v-on:click="editTask">EDIT</div>
+    <div class="details">
+      <h4 class="heading">Task details:</h4>
+      <div>{{ task.details }}</div>
+    </div>
+    <div class="button-controls">
+      <div v-on:click="hideDetails" class="hide-details"><i class="fa fa-compress" aria-hidden="true"></i></div>
+      <div v-on:click="showDetails" class="expand-details"><i class="fa fa-expand" aria-hidden="true"></i></div>
+      <div v-on:click="editTask"><i class="fa fa-pencil" aria-hidden="true"></i></div>
+
+    </div>
   </div>
   <div
+    class="task"
     v-else>
     <input type="text" v-model="task.name">
     <textarea v-model="task.details"></textarea>
     <datepicker v-model="task.dueDate" format="M/d/yyyy"></datepicker>
     <label for="completed-checkbox">Completed: </label>
     <input type="checkbox" id="completed-checkbox" v-model="task.completed">
-    <div v-on:click="deleteTask">X</div>
-    <div v-on:click="saveTask">SAVE</div>
+    <div class="button-controls">
+      <div v-on:click="deleteTask"><i class="fa fa-trash-o" aria-hidden="true"></i></div>
+      <div v-on:click="saveTask"><i class="fa fa-floppy-o" aria-hidden="true"></i></div>
+    </div>
   </div>
 </template>
 
@@ -83,14 +98,37 @@ export default {
 
 <style lang="scss" scoped>
 .task {
-  border: 1px solid green;
+  border: 1px solid black;
+  position: relative;
+  padding: 5px;
   &.active {
-    .details {
+    .details, .hide-details {
       display: block;
     }
+    .expand-details {
+      display: none;
+    }
+  }
+  .details, .hide-details {
+    display: none;
+  }
+  .task-content {
+    max-width: 95%;
+    text-align: left;
   }
   .details {
-    display: none;
+    text-align: left;
+  }
+  .heading {
+    margin: 0px;
+    font-weight: bold;
+  }
+  .button-controls {
+    position: absolute;
+    display: block;
+    float: right;
+    top: 0px;
+    right: 5px;
   }
 }
 </style>
