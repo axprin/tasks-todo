@@ -1,6 +1,6 @@
 # tasks-todo
 
-> A Vue.js and Vuex project that manages tasks
+> A Vue.js/Vuex project that manages tasks
 
 ## Build Setup
 
@@ -17,14 +17,9 @@ npm run build
 # build for production and view the bundle analyzer report
 npm run build --report
 
-# run unit tests
-npm run unit
+# run tests
+npm run test
 
-# run e2e tests
-npm run e2e
+Some dummy/test data has been stubbed out in `src/store.js`. To use it, simply uncomment lines 13-18 and reload the app.
 
-# run all tests
-npm test
 ```
-
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
