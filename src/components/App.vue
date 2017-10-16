@@ -9,8 +9,8 @@
         <textarea class="form-element details" placeholder="Task Details" v-model="newTask.details"></textarea>
         <div v-on:click="addTask" class="button popup-button save">Save Task</div>
         <div v-on:click="closeForm" class="button popup-button">Cancel</div>
+        <div v-if="error" class="error">{{ error }}</div>
       </form>
-      <div v-if="error" class="error">{{ error }}</div>
     </div>
     <div v-on:click="launchForm" class="button launch">New task <i class="fa fa-plus-square-o" aria-hidden="true"></i></div>
     <div class="filters-toggle" v-on:click="toggleFilters" v-if="!showFilters"><h3>Filters <i class="fa fa-chevron-down" aria-hidden="true"></i></h3></div>
@@ -150,7 +150,7 @@ export default {
     addTask() {
       // basic error handling
       if (!this.newTask.name || !this.newTask.details || !this.newTask.dueDate) {
-        this.error = 'You must gimme all required fields';
+        this.error = 'You must provide all fields';
         return;
       }
 
