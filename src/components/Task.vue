@@ -13,6 +13,7 @@
       </div>
       <div>
         <span class="heading">Due date</span>: {{ this.formatDate(this.task.dueDate) }}
+        <div class="due-indicator" v-bind:class="this.indicatorState"></div>
       </div>
     </div>
     <div class="details">
@@ -62,11 +63,27 @@ export default {
     return {
       editMode: false,
       isActive: false,
+      indicatorState: '',
     };
+  },
+  mounted() {
+    this.setIndicator();
   },
   methods: {
     formatDate(date) {
       return moment(date).format('MM/DD/YYYY');
+    },
+    setIndicator() {
+      if (moment(this.task.dueDate).isSame(moment(), 'date')) {
+        // set indicator to Green if due date is tomorrow
+        this.indicatorState = 'today';
+      } else if (moment(this.task.dueDate).isSame(moment().add(1, 'day'), 'date')) {
+        // set indicator to Yellow if due date is today
+        this.indicatorState = 'tomorrow';
+      } else {
+        // otherwise, remove indicator
+        this.indicatorState = '';
+      }
     },
     showDetails() {
       this.isActive = true;
@@ -83,6 +100,7 @@ export default {
     },
     saveTask() {
       this.editMode = false;
+      this.setIndicator();
     },
   },
   components: {
@@ -130,6 +148,20 @@ export default {
     font-weight: bold;
     float: left;
   }
+  .due-indicator {
+    height: 20px;
+    width: 20px;
+    position: absolute;
+    border-radius: 10px;
+    top: 50px;
+    left: 175px;
+    &.today {
+      background-color: yellow;
+    }
+    &.tomorrow {
+      background-color: green;
+    }
+  }
   .task-name {
     float: left;
     display: block;
@@ -147,6 +179,7 @@ export default {
     float: right;
     top: 0px;
     right: 5px;
+    cursor: pointer;
   }
 }
 </style>
