@@ -16,27 +16,26 @@
       </div>
     </div>
     <div class="details">
-      <h4 class="heading">Task details:</h4>
+      <h4 class="heading">Task details:&nbsp;</h4>
       <div>{{ task.details }}</div>
     </div>
     <div class="button-controls">
       <div v-on:click="hideDetails" class="hide-details"><i class="fa fa-compress" aria-hidden="true"></i></div>
       <div v-on:click="showDetails" class="expand-details"><i class="fa fa-expand" aria-hidden="true"></i></div>
-      <div v-on:click="editTask"><i class="fa fa-pencil" aria-hidden="true"></i></div>
+      <div v-on:click="editTask" class="edit-button"><i class="fa fa-pencil" aria-hidden="true"></i></div>
 
     </div>
   </div>
   <div
-    class="task"
+    class="task edit"
     v-else>
-    <input type="text" v-model="task.name">
-    <textarea v-model="task.details"></textarea>
-    <datepicker v-model="task.dueDate" format="M/d/yyyy"></datepicker>
-    <label for="completed-checkbox">Completed: </label>
-    <input type="checkbox" id="completed-checkbox" v-model="task.completed">
+    <div class="form-el"><span class="heading">Task: </span><input type="text" v-model="task.name" class="task-name"></div>
+    <div class="form-el"><span class="heading">Completed: </span><input type="checkbox" class="completed-checkbox" v-model="task.completed"></div>
+    <div class="form-el"><span class="heading">Details: </span><textarea v-model="task.details" class="task-name"></textarea></div>
+    <div class="form-el datepicker"><span class="heading">Due date: </span><datepicker v-model="task.dueDate" format="M/d/yyyy" class="datepicker"></datepicker></div>
     <div class="button-controls">
-      <div v-on:click="deleteTask"><i class="fa fa-trash-o" aria-hidden="true"></i></div>
-      <div v-on:click="saveTask"><i class="fa fa-floppy-o" aria-hidden="true"></i></div>
+      <div v-on:click="deleteTask" class="delete-button"><i class="fa fa-trash-o" aria-hidden="true"></i></div>
+      <div v-on:click="saveTask" class="save-button"><i class="fa fa-floppy-o" aria-hidden="true"></i></div>
     </div>
   </div>
 </template>
@@ -87,7 +86,6 @@ export default {
     },
     saveTask() {
       this.editMode = false;
-      // store.commit('updateTask', this.task);
     },
   },
   components: {
@@ -109,6 +107,9 @@ export default {
       display: none;
     }
   }
+  &.edit {
+    min-height: 120px;
+  }
   .details, .hide-details {
     display: none;
   }
@@ -119,9 +120,29 @@ export default {
   .details {
     text-align: left;
   }
+  .form-el {
+    display: block;
+    height: 24px;
+    &.datepicker {
+      position: absolute;
+      bottom: 22px;
+    }
+  }
   .heading {
     margin: 0px;
     font-weight: bold;
+    float: left;
+  }
+  .task-name {
+    float: left;
+    display: block;
+    resize: none;
+    left: 107px;
+    position: absolute;
+  }
+  .completed-checkbox {
+    position: relative;
+    left: -180px;
   }
   .button-controls {
     position: absolute;

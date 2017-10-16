@@ -7,12 +7,12 @@
         <datepicker class="form-element date-picker" v-model="newTask.dueDate" format="M/d/yyyy" placeholder="Select Due Date"></datepicker>
         <input class="form-element name" type="text" placeholder="Task Name" v-model="newTask.name">
         <textarea class="form-element details" placeholder="Task Details" v-model="newTask.details"></textarea>
-        <div v-on:click="addTask">Save Task</div>
-        <div v-on:click="closeForm">Cancel</div>
+        <div v-on:click="addTask" class="button popup-button save">Save Task</div>
+        <div v-on:click="closeForm" class="button popup-button">Cancel</div>
       </form>
       <div v-if="error" class="error">{{ error }}</div>
     </div>
-    <div v-on:click="launchForm" class="button">New task <i class="fa fa-plus-square-o" aria-hidden="true"></i></div>
+    <div v-on:click="launchForm" class="button launch">New task <i class="fa fa-plus-square-o" aria-hidden="true"></i></div>
     <div class="filters-toggle" v-on:click="toggleFilters" v-if="!showFilters"><h3>Filters <i class="fa fa-chevron-down" aria-hidden="true"></i></h3></div>
     <div class="filters-toggle" v-on:click="toggleFilters" v-if="showFilters"><h3>Filters <i class="fa fa-chevron-up" aria-hidden="true"></i></h3></div>
     <div class="filters-wrapper" v-if="showFilters">
@@ -36,12 +36,12 @@
         </li>
       </ul>
     </div>
-    <h2>My Tasks:</h2>
+    <h2 class="title">My Tasks:</h2>
     <div class="task-wrapper" v-if="filteredTasks.length > 0">
       <Task v-for="task in filteredTasks" :task="task" :key="task.id"></Task>
     </div>
     <div v-else>
-      NO TASKS
+      No tasks meet this critera
     </div>
   </div>
 </template>
@@ -245,6 +245,11 @@ export default {
         right: 5px;
         top: 5px;
         cursor: pointer;
+      }
+      .popup-button {
+        width: 100px;
+        display: inline-block;
+        margin: 10px;
       }
     }
   }

@@ -5,5 +5,9 @@
   "globals": {
     "expect": true,
     "sinon": true
+  },
+  "no-underscore-dangle": [2, { "allow": [] }],
+  "rules":{
+      "no-console":0
   }
 }
