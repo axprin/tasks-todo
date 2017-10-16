@@ -80,6 +80,9 @@ export default {
       } else if (moment(this.task.dueDate).isSame(moment().add(1, 'day'), 'date')) {
         // set indicator to Yellow if due date is today
         this.indicatorState = 'tomorrow';
+      } else if (moment(this.task.dueDate).isBefore(moment(), 'date')) {
+        // set indicator to Red if due date has already passed
+        this.indicatorState = 'past';
       } else {
         // otherwise, remove indicator
         this.indicatorState = '';
@@ -150,16 +153,33 @@ export default {
   }
   .due-indicator {
     height: 20px;
-    width: 20px;
     position: absolute;
     border-radius: 10px;
     top: 50px;
     left: 175px;
+    padding: 0 7px 2px;;
     &.today {
       background-color: yellow;
+      &:after {
+        content: 'DUE TODAY';
+        font-size: 12px;
+      }
     }
     &.tomorrow {
       background-color: green;
+      &:after {
+        content: 'DUE TOMORROW';
+        font-size: 12px;
+        color: white;
+      }
+    }
+    &.past {
+      background-color: red;
+      &:after {
+        content: 'PAST DUE';
+        font-size: 12px;
+        color: white;
+      }
     }
   }
   .task-name {
