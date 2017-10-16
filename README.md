@@ -20,6 +20,5 @@ npm run build --report
 # run tests
 npm run test
 
-Some dummy/test data has been stubbed out in `src/store.js`. To use it, simply uncomment lines 13-18 and reload the app.
-
 ```
+Some dummy/test data has been stubbed out in `src/store.js`. To use it, simply uncomment lines 13-18 and reload the app.
