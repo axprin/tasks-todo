@@ -29,10 +29,19 @@
   <div
     class="task edit"
     v-else>
-    <div class="form-el"><span class="heading">Task: </span><input type="text" v-model="task.name" class="task-name"></div>
-    <div class="form-el"><span class="heading">Completed: </span><input type="checkbox" class="completed-checkbox" v-model="task.completed"></div>
-    <div class="form-el"><span class="heading">Details: </span><textarea v-model="task.details" class="task-name"></textarea></div>
-    <div class="form-el datepicker"><span class="heading">Due date: </span><datepicker v-model="task.dueDate" format="M/d/yyyy" class="datepicker"></datepicker></div>
+    <div class="form-el">
+      <span class="heading">Task: </span><input type="text" v-model="task.name" class="task-name">
+    </div>
+    <div class="form-el">
+      <span class="heading">Completed: </span><input type="checkbox" class="completed-checkbox" v-model="task.completed">
+    </div>
+    <div class="form-el">
+      <span class="heading">Details: </span><textarea v-model="task.details" class="task-name"></textarea>
+    </div>
+    <div class="form-el datepicker">
+      <span class="heading">Due date: </span><datepicker v-model="task.dueDate" format="M/d/yyyy" class="datepicker"></datepicker>
+    </div>
+
     <div class="button-controls">
       <div v-on:click="deleteTask" class="delete-button"><i class="fa fa-trash-o" aria-hidden="true"></i></div>
       <div v-on:click="saveTask" class="save-button"><i class="fa fa-floppy-o" aria-hidden="true"></i></div>
@@ -42,6 +51,7 @@
 
 <script>
 import Datepicker from 'vuejs-datepicker';
+import moment from 'moment';
 
 import store from './../store';
 
@@ -56,33 +66,20 @@ export default {
   },
   methods: {
     formatDate(date) {
-      const day = date.getDate();
-      const month = date.getMonth() + 1;
-      const year = date.getFullYear();
-      return `${month}/${day}/${year}`;
+      return moment(date).format('MM/DD/YYYY');
     },
     showDetails() {
-      // eslint-disable-next-line
-      // console.log('before isActive changed: ', this.isActive);
       this.isActive = true;
     },
     hideDetails(e) {
       e.stopPropagation();
-      // eslint-disable-next-line
-      // console.log('before isActive changed: ', this.isActive, e);
       this.isActive = false;
     },
     deleteTask() {
-      // eslint-disable-next-line
-      // console.log('clicking an X' );
       store.commit('deleteTask', this.task);
     },
     editTask() {
       this.editMode = true;
-      // this.friendlyDate = this.formatDate(this.task.dueDate);
-      // eslint-disable-next-line
-      // console.log('clicking edit' );
-      // store.commit('updateTask', this.task);
     },
     saveTask() {
       this.editMode = false;

@@ -40,6 +40,9 @@
     <div class="task-wrapper" v-if="filteredTasks.length > 0">
       <Task v-for="task in filteredTasks" :task="task" :key="task.id"></Task>
     </div>
+    <div v-else-if="tasks.length === 0">
+      You have no tasks at this time
+    </div>
     <div v-else>
       No tasks meet this critera
     </div>
@@ -96,7 +99,7 @@ export default {
   },
   computed: {
     tasks() {
-      // get all the tasks from the vuex store obj:
+      // get all the tasks from the vuex store:
       return store.state.tasks;
     },
     filteredTasks() {
